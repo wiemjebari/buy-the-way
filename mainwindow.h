@@ -1,51 +1,26 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
+#include"employe.h"
 
-#include"connexion.h"
-#include "facture.h"
 #include <QMainWindow>
 
-namespace Ui {
-class MainWindow;
-}
+QT_BEGIN_NAMESPACE
+namespace Ui { class MainWindow; }
+QT_END_NAMESPACE
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = nullptr);
+    MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-
 private slots:
-
-    void on_Commander_3_clicked();
-
-    void on_pb_supprimer_5_clicked();
-
-    void on_pb_modifier_commande_clicked();
-
-    void on_pb_ajouter_facture_clicked();
-
-    void on_pushButton_modifier_facture_clicked();
-
-    void on_pb_supprimer_facture_clicked();
-
-    void on_lineEdit_recherche_textChanged(const QString &arg1);
-
-    void on_lineEdit_recherche_commande_textChanged(const QString &arg1);
-
-    void on_comboBox_currentTextChanged(const QString &arg1);
-
-    void on_lineEdit_Reference_12_textChanged(const QString &arg1);
-
-    void on_comboBox_4_currentTextChanged(const QString &arg1);
-
-    void on_lineEdit_modifierID_commande_textChanged(const QString &arg1);
+    void on_pushButton_login_clicked();
+    
 
 private:
     Ui::MainWindow *ui;
-    Facture tmpFacture;
-    Commande tmpCommande;
+    employe *empl;
 };
 #endif // MAINWINDOW_H
