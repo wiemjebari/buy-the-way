@@ -1,40 +1,36 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "facture.h"
+
+#include "toutes_les_fonctions.h"
 #include <QMessageBox>
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
+
+MainWindow::MainWindow(QWidget *parent)
+    : QMainWindow(parent)
+    , ui(new Ui::MainWindow)
 {
-ui->setupUi(this);
-ui->TabCommandes_3->setModel(tmpCommande.afficher());
-ui->tableView->setModel(tmpFacture.afficher());
+    ui->setupUi(this);
+    ui->tableView_c->setModel(tmpcaisse.Afficher());
+    ui->tableView_r->setModel(tmprayon.Afficher());
+    ui->tableView_p->setModel(tmpproduit.Afficher());
+    ui->tableView_aff_t->setModel(tmpticket.Afficher());//refresh
+    ui->tableView_p_v->setModel(tmpproduit_v.Afficher_PV());//refresh
 
-ui->comboBox->addItem("");
-ui->comboBox->addItem("En fonction de la date");
-ui->comboBox->addItem("En fonction de la Reference");
-ui->comboBox->addItem("En fonction de l'etat");
 
-ui->comboBox_4->addItem("");
-ui->comboBox_4->addItem("En fonction de la catégorie");
-ui->comboBox_4->addItem("En fonction de la Reference");
-ui->comboBox_4->addItem("En fonction de la quantité");
 
-ui->comboBox_2->addItem("");
-ui->comboBox_2->addItem("Marche frais");
-ui->comboBox_2->addItem("Alimentaire");
-ui->comboBox_2->addItem("Hygiene/Beaute");
-ui->comboBox_2->addItem("Maison/Jardin");
-ui->comboBox_2->addItem("H.T/Electro");
-ui->comboBox_2->addItem("Textile");
+    ui->comboBox_Type->addItem("Marche frais");
+    ui->comboBox_Type->addItem("Alimentaire");
+    ui->comboBox_Type->addItem("Hygiene/Beaute");
+    ui->comboBox_Type->addItem("Maison/Jardin");
+    ui->comboBox_Type->addItem("H.T/Electro");
+    ui->comboBox_Type->addItem("Textile");
 
-ui->comboBox_3->addItem("");
-ui->comboBox_3->addItem("Marche frais");
-ui->comboBox_3->addItem("Alimentaire");
-ui->comboBox_3->addItem("Hygiene/Beaute");
-ui->comboBox_3->addItem("Maison/Jardin");
-ui->comboBox_3->addItem("H.T/Electro");
-ui->comboBox_3->addItem("Textile");
+    ui->comboBox_Type_3->addItem("Marche frais");
+    ui->comboBox_Type_3->addItem("Alimentaire");
+    ui->comboBox_Type_3->addItem("Hygiene/Beaute");
+    ui->comboBox_Type_3->addItem("Maison/Jardin");
+    ui->comboBox_Type_3->addItem("H.T/Electro");
+    ui->comboBox_Type_3->addItem("Textile");
+
 }
 
 MainWindow::~MainWindow()
@@ -42,244 +38,433 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::on_pb_ajouter_facture_clicked()
+
+
+void MainWindow::on_pushButton_Ajouter_c_clicked()
 {
-    int Ref_Facture = ui->lineEdit_Reference_8->text().toInt();
-    int ID_Commande= ui->lineEdit_Reference_10->text().toInt();
-    QString description=ui->lineEdit_description_facture->text();
-    QString date=ui->lineEdit_Date->text();
-    float montant=ui->lineEdit_ID_Commande3_3->text().toFloat();
+    player = new QMediaPlayer;
+    player->setMedia(QUrl::fromLocalFile("C:/Users/Occurence/Desktop/Swoosh sound effect.mp3"));
+    player->setVolume(50);
+    player->play();
+    int id = ui->lineEdit_ID->text().toInt();
     QString etat;
-    if(ui->radioButton->isChecked())
+    if(ui->radioButton_fonc_2->isChecked())
     {
-        etat= ui->radioButton->text();
+        etat= ui->radioButton_fonc_2->text();
     }
-    else if(ui->radioButton_2->isChecked())
+    else if(ui->radioButton_rep_2->isChecked())
     {
-        etat= ui->radioButton_2->text();
+        etat= ui->radioButton_rep_2->text();
+    }
+    else if(ui->radioButton_panne_2->isChecked())
+    {
+        etat= ui->radioButton_panne_2->text();
     }
 
-    Facture c(Ref_Facture,ID_Commande,description,date,montant,etat);
+    Caisse c(id,etat);
 
-    bool test=c.ajouter();
+    bool test=c.Ajouter();
     if(test)
     {
-        ui->tableView->setModel(tmpFacture.afficher());//refresh
-        QMessageBox::information(nullptr, QObject::tr("Ajouter une facture"),
-                  QObject::tr("facture ajouté.\n"
+        ui->tableView_c->setModel(tmpcaisse.Afficher());//refresh
+        QMessageBox::information(nullptr, QObject::tr("Ajouter une caisse"),
+                  QObject::tr("Caisse ajouté.\n"
                               "Click Cancel to exit."), QMessageBox::Cancel);
 
     }
     else
-        QMessageBox::critical(nullptr, QObject::tr("Ajouter une facture"),
+        QMessageBox::critical(nullptr, QObject::tr("Ajouter une caisse"),
                   QObject::tr("Erreur !.\n"
                               "Click Cancel to exit."), QMessageBox::Cancel);
 
+    player->stop();
 }
 
-void MainWindow::on_pushButton_modifier_facture_clicked()
+void MainWindow::on_pushButton_Supprimer_c_clicked()
 {
-    int Ref_Facture = ui->lineEdit_Reference_12->text().toInt();
-    int ID_Commande= ui->lineEdit_Reference_11->text().toInt();
-    QString description=ui->lineEdit_ID_Fournisseur3_4->text();
-    QString date=ui->lineEdit_ID_Fournisseur3_5->text();
-    float montant=ui->lineEdit_ID_Commande3_4->text().toFloat();
-    QString etat;
-    if(ui->radioButton_3->isChecked())
-    {
-        etat= ui->radioButton_3->text();
-    }
-    else if(ui->radioButton_4->isChecked())
-    {
-        etat= ui->radioButton_4->text();
-    }
-    bool test= tmpFacture.modifier_facture(Ref_Facture,ID_Commande,description,date,montant,etat);
+    player = new QMediaPlayer;
+    player->setMedia(QUrl::fromLocalFile("C:/Users/Occurence/Desktop/Swoosh sound effect.mp3"));
+    player->setVolume(50);
+    player->play();
+
+    int id = ui->lineEdit_ID_s->text().toInt();
+    bool test=tmpcaisse.Supprimer(id);
     if(test)
-    {
-        ui->tableView->setModel(tmpFacture.afficher());
-        QMessageBox::information(nullptr, QObject::tr("Modifier une facture"),
-                  QObject::tr("facture modifié.\n"
-                              "Click Cancel to exit."), QMessageBox::Cancel);
-
-    }
-    else
-     {   QMessageBox::critical(nullptr, QObject::tr("Modifier une facture"),
-                  QObject::tr("Erreur !.\n"
-                              "Click Cancel to exit."), QMessageBox::Cancel);
-
-}
-}
-
-
-void MainWindow::on_pb_supprimer_facture_clicked()
-{
-    {
-        int Ref_Facture = ui->lineEdit_Reference_9->text().toInt();
-        bool test=tmpFacture.supprimer(Ref_Facture);
-        if(test)
-        {ui->tableView->setModel(tmpFacture.afficher());//refresh
-            QMessageBox::information(nullptr, QObject::tr("Supprimer une facture"),
-                        QObject::tr("facture supprimée.\n"
-                                    "Click Cancel to exit."), QMessageBox::Cancel);
-
-        }
-        else
-            QMessageBox::critical(nullptr, QObject::tr("Supprimer une facture"),
-                        QObject::tr("Erreur !.\n"
-                                    "Click Cancel to exit."), QMessageBox::Cancel);
-    }
-
-
-
-}
-
-void MainWindow::on_lineEdit_recherche_textChanged(const QString &arg1)
-{
-    QString Ref_Facture= ui->lineEdit_recherche->text();
-
-        ui->tableView_2->setModel(tmpFacture.afficher_recherche(Ref_Facture));
-}
-
-void MainWindow::on_comboBox_currentTextChanged(const QString &arg1)
-{
-    QString tri=ui->comboBox->currentText();
-    if(tri=="")
-        ui->tableView->setModel(tmpFacture.afficher());
-    else if(tri=="En fonction de la Reference")
-        ui->tableView->setModel(tmpFacture.afficher_tri_ref());
-    else if(tri=="En fonction de la date")
-        ui->tableView->setModel(tmpFacture.afficher_tri_date());
-    else if(tri=="En fonction de l'etat")
-        ui->tableView->setModel(tmpFacture.afficher_tri_etat());
-}
-
-void MainWindow::on_lineEdit_Reference_12_textChanged(const QString &arg1)
-{
-    QString Ref_Facture=ui->lineEdit_Reference_12->text();
-    QSqlQuery gry;
-    gry.prepare("select * from facture where REF_FACTURE='"+Ref_Facture+"'");
-    if(gry.exec())
-    {
-        while (gry.next())
-        {
-         ui->lineEdit_Reference_11->setText(gry.value(1).toString());
-         ui->lineEdit_ID_Fournisseur3_4->setText(gry.value(2).toString());
-         ui->lineEdit_ID_Fournisseur3_5->setText(gry.value(3).toString());
-         ui->lineEdit_ID_Commande3_4->setText(gry.value(4).toString());
-
-        }
-    }
-
-}
-
-
-
-/*********************************************************************************/
-
-
-void MainWindow::on_Commander_3_clicked()
-{
-    int ID_Commande = ui->lineEdit_ID_Commande_3->text().toInt();
-    int ID_Fournisseur= ui->lineEdit_ID_Fournisseur_3->text().toInt();
-    QString CategorieP=  ui->comboBox_2->currentText();
-    QString Produit= ui->lineEdit_Produit_3->text();
-    float PrixU= ui->lineEdit_PrixU_3->text().toFloat();
-    int Quantite = ui->lineEdit_Quantite_3->text().toInt();
-  Commande e(ID_Commande,ID_Fournisseur,CategorieP,Produit,PrixU,Quantite);
-  bool test=e.ajouter_commande();
-  if(test)
-{ui->TabCommandes_3->setModel(tmpCommande.afficher());//refresh
-QMessageBox::information(nullptr, QObject::tr("Ajouter une Commande"),
-                  QObject::tr("Commande ajoutée.\n"
-                              "Click Cancel to exit."), QMessageBox::Cancel);
-}
-
-  else
-      QMessageBox::critical(nullptr, QObject::tr("Ajouter une Commande"),
-                  QObject::tr("Erreur !.\n"
-                              "Click Cancel to exit."), QMessageBox::Cancel);
-}
-
-void MainWindow::on_pb_supprimer_5_clicked()
-{
-    int ID_Commande = ui->lineEdit_SupprimerCommande->text().toInt();
-    bool test=tmpCommande.supprimer_commande(ID_Commande);
-    if(test)
-    {ui->TabCommandes_3->setModel(tmpCommande.afficher());//refresh
-        QMessageBox::information(nullptr, QObject::tr("Supprimer une Commande"),
-                    QObject::tr("Commande supprimée.\n"
+    {ui->tableView_c->setModel(tmpcaisse.Afficher());//refresh
+        QMessageBox::information(nullptr, QObject::tr("Supprimer une caisse"),
+                    QObject::tr("Caisse supprimé.\n"
                                 "Click Cancel to exit."), QMessageBox::Cancel);
 
     }
     else
-        QMessageBox::critical(nullptr, QObject::tr("Supprimer une Commande"),
+        QMessageBox::critical(nullptr, QObject::tr("Supprimer une caisse"),
                     QObject::tr("Erreur !.\n"
                                 "Click Cancel to exit."), QMessageBox::Cancel);
+     player->stop();
 }
 
-
-void MainWindow::on_pb_modifier_commande_clicked()
+void MainWindow::on_pushButton_Ajouter_r_clicked()
 {
-    int ID_Commande = ui->lineEdit_modifierID_commande->text().toInt();
-    int ID_Fournisseur= ui->lineEdit_modifierID_fournisseur->text().toInt();
-    QString CategorieP=  ui->comboBox_3->currentText();
-    QString Produit= ui->lineEdit_modifierProduit->text();
-    float PrixU= ui->lineEdit_modifier_PrixU->text().toFloat();
-    int Quantite = ui->lineEdit_modifier_quantite->text().toInt();
+    player = new QMediaPlayer;
+    player->setMedia(QUrl::fromLocalFile("C:/Users/Occurence/Desktop/Swoosh sound effect.mp3"));
+    player->setVolume(50);
+    player->play();
+    int id = ui->lineEdit_Num->text().toInt();
+    QString type= ui->comboBox_Type->currentText();
 
-          bool test=tmpCommande.modifier_commande(ID_Commande,ID_Fournisseur,CategorieP,Produit,PrixU,Quantite);
-          if(test)
-            {ui->TabCommandes_3->setModel(tmpCommande.afficher());//refresh
-                QMessageBox::information(nullptr, QObject::tr("Modifier une commande"),
-                            QObject::tr("Donnée modifié.\n"
-                                        "Click Cancel to exit."), QMessageBox::Cancel);
-
-            }
-            else
-               { QMessageBox::critical(nullptr, QObject::tr("Modifier une commande"),
-                            QObject::tr("Erreur !.\n"
-                                        "Click Cancel to exit."), QMessageBox::Cancel);}
-}
-
-
-
-
-
-
-void MainWindow::on_lineEdit_recherche_commande_textChanged(const QString &arg1)
-{
-    QString ID_Commande= ui->lineEdit_recherche_commande->text();
-
-        ui->tableView_3->setModel(tmpCommande.afficher_recherche(ID_Commande));
-}
-
-void MainWindow::on_comboBox_4_currentTextChanged(const QString &arg1)
-{
-    QString tri=ui->comboBox_4->currentText();
-    if(tri=="")
-        ui->TabCommandes_3->setModel(tmpCommande.afficher());
-    else if(tri=="En fonction de la quantité")
-        ui->TabCommandes_3->setModel(tmpCommande.afficher_tri_quantite());
-    else if(tri=="En fonction de la catégorie")
-        ui->TabCommandes_3->setModel(tmpCommande.afficher_tri_categorie());
-    else if(tri=="En fonction de la Reference")
-        ui->TabCommandes_3->setModel(tmpCommande.afficher_tri_ref());
-}
-
-void MainWindow::on_lineEdit_modifierID_commande_textChanged(const QString &arg1)
-{
-    QString ID_COMMANDE=ui->lineEdit_modifierID_commande->text();
-    QSqlQuery gry;
-    gry.prepare("select * from tabcommande where ID_COMMANDE='"+ID_COMMANDE+"'");
-    if(gry.exec())
+    Rayon r(id,type);
+    bool test=r.Ajouter();
+    if(test)
     {
-        while (gry.next())
-        {
-         ui->lineEdit_modifierID_fournisseur->setText(gry.value(1).toString());
-         ui->lineEdit_modifierProduit->setText(gry.value(3).toString());
-         ui->lineEdit_modifier_PrixU->setText(gry.value(4).toString());
-         ui->lineEdit_modifier_quantite->setText(gry.value(5).toString());
+        ui->tableView_r->setModel(tmprayon.Afficher());//refresh
+        QMessageBox::information(nullptr, QObject::tr("Ajouter un rayon"),
+                  QObject::tr("Rayon ajouté.\n"
+                              "Click Cancel to exit."), QMessageBox::Cancel);
 
-        }
     }
+    else
+        QMessageBox::critical(nullptr, QObject::tr("Ajouter un rayon"),
+                  QObject::tr("Erreur !.\n"
+                              "Click Cancel to exit."), QMessageBox::Cancel);
+    player->stop();
+}
+
+void MainWindow::on_pushButton_Supprimer_r_clicked()
+{
+    player = new QMediaPlayer;
+    player->setMedia(QUrl::fromLocalFile("C:/Users/Occurence/Desktop/Swoosh sound effect.mp3"));
+    player->setVolume(50);
+    player->play();
+    int id = ui->lineEdit_Num_s->text().toInt();
+    bool test=tmprayon.Supprimer(id);
+    if(test)
+    {ui->tableView_r->setModel(tmprayon.Afficher());//refresh
+        ui->tableView_p->setModel(tmpproduit.Afficher());//refresh
+        QMessageBox::information(nullptr, QObject::tr("Supprimer un rayon"),
+                    QObject::tr("Rayon supprimé.\n"
+                                "Click Cancel to exit."), QMessageBox::Cancel);
+
+    }
+    else
+        QMessageBox::critical(nullptr, QObject::tr("Supprimer un rayon"),
+                    QObject::tr("Erreur !.\n"
+                                "Click Cancel to exit."), QMessageBox::Cancel);
+    player->stop();
+}
+
+void MainWindow::on_pushButton_Ajouter_p_clicked()
+{
+    player = new QMediaPlayer;
+    player->setMedia(QUrl::fromLocalFile("C:/Users/Occurence/Desktop/Swoosh sound effect.mp3"));
+    player->setVolume(50);
+    player->play();
+    int id = ui->lineEdit_IDp->text().toInt();
+    QString nom= ui->lineEdit_nom->text();
+    int qant = ui->lineEdit_qant->text().toInt();
+    float prix = ui->lineEdit_prix->text().toFloat();
+    QString dle= ui->lineEdit_DLE->text();
+    int num = ui->lineEdit_NumR->text().toInt();
+
+    Produit p(id,nom,qant,prix,dle,num);
+
+    bool test=p.Ajouter();
+    if(test)
+    {
+        ui->tableView_p->setModel(tmpproduit.Afficher());//refresh
+        QMessageBox::information(nullptr, QObject::tr("Ajouter un produit"),
+                  QObject::tr("Produit ajouté.\n"
+                              "Click Cancel to exit."), QMessageBox::Cancel);
+
+    }
+    else
+        QMessageBox::critical(nullptr, QObject::tr("Ajouter un produit"),
+                  QObject::tr("Erreur !.\n"
+                              "Click Cancel to exit."), QMessageBox::Cancel);
+    player->stop();
+}
+
+void MainWindow::on_pushButton_Supprimer_p_clicked()
+{
+    player = new QMediaPlayer;
+    player->setMedia(QUrl::fromLocalFile("C:/Users/Occurence/Desktop/Swoosh sound effect.mp3"));
+    player->setVolume(50);
+    player->play();
+    int id = ui->lineEdit_IDp_s->text().toInt();
+    bool test=tmpproduit.Supprimer(id);
+    if(test)
+    {ui->tableView_p->setModel(tmpproduit.Afficher());//refresh
+        ui->tableView_p_v->setModel(tmpproduit_v.Afficher_PV());//refresh
+        QMessageBox::information(nullptr, QObject::tr("Supprimer un produit"),
+                    QObject::tr("Produit supprimé.\n"
+                                "Click Cancel to exit."), QMessageBox::Cancel);
+
+    }
+    else
+        QMessageBox::critical(nullptr, QObject::tr("Supprimer un produit"),
+                    QObject::tr("Erreur !.\n"
+                                "Click Cancel to exit."), QMessageBox::Cancel);
+    player->stop();
+}
+
+void MainWindow::on_pushButton_Modifier_c_clicked()
+{
+    player = new QMediaPlayer;
+    player->setMedia(QUrl::fromLocalFile("C:/Users/Occurence/Desktop/Swoosh sound effect.mp3"));
+    player->setVolume(50);
+    player->play();
+
+    int id = ui->lineEdit_ID_2->text().toInt();
+    QString etat;
+    if(ui->radioButton_fonc->isChecked())
+    {
+        etat= ui->radioButton_fonc->text();
+    }
+    else if(ui->radioButton_rep->isChecked())
+    {
+        etat= ui->radioButton_rep->text();
+    }
+    else if(ui->radioButton_panne->isChecked())
+    {
+        etat= ui->radioButton_panne->text();
+    }
+
+    bool test=tmpcaisse.Modifier(id,etat);
+    if(test)
+    {ui->tableView_c->setModel(tmpcaisse.Afficher());//refresh
+        QMessageBox::information(nullptr, QObject::tr("Modifier une caisse"),
+                    QObject::tr("Caisse modifier.\n"
+                                "Click Cancel to exit."), QMessageBox::Cancel);
+
+    }
+    else
+        QMessageBox::critical(nullptr, QObject::tr("Modifier une caisse"),
+                    QObject::tr("Erreur !.\n"
+                                "Click Cancel to exit."), QMessageBox::Cancel);
+    player->stop();
+
+}
+
+void MainWindow::on_pushButton_Modifier_p_clicked()
+{
+    player = new QMediaPlayer;
+    player->setMedia(QUrl::fromLocalFile("C:/Users/Occurence/Desktop/Swoosh sound effect.mp3"));
+    player->setVolume(50);
+    player->play();
+
+    int id = ui->lineEdit_IDp_2->text().toInt();
+    QString nom= ui->lineEdit_nom_2->text();
+    int qant = ui->lineEdit_qant_2->text().toInt();
+    float prix = ui->lineEdit_prix_2->text().toFloat();
+    QString dle= ui->lineEdit_DLE_2->text();
+    int num = ui->lineEdit_NumR_2->text().toInt();
+    bool test=tmpproduit.Modifier(id,nom,qant,prix,dle,num);
+    if(test)
+    {ui->tableView_p->setModel(tmpproduit.Afficher());//refresh
+        QMessageBox::information(nullptr, QObject::tr("Modifier un produit"),
+                    QObject::tr("Produit modifier.\n"
+                                "Click Cancel to exit."), QMessageBox::Cancel);
+
+    }
+    else
+        QMessageBox::critical(nullptr, QObject::tr("Modifier un produit"),
+                    QObject::tr("Erreur !.\n"
+                                "Click Cancel to exit."), QMessageBox::Cancel);
+    player->stop();
+
+}
+
+void MainWindow::on_pushButton_Modifier_r_clicked()
+{
+    player = new QMediaPlayer;
+    player->setMedia(QUrl::fromLocalFile("C:/Users/Occurence/Desktop/Swoosh sound effect.mp3"));
+    player->setVolume(50);
+    player->play();
+
+    int id = ui->lineEdit_Num_3->text().toInt();
+    QString type= ui->comboBox_Type_3->currentText();
+    bool test=tmprayon.Modifier(id,type);
+    if(test)
+    {ui->tableView_r->setModel(tmprayon.Afficher());//refresh
+        QMessageBox::information(nullptr, QObject::tr("Modifier un rayon"),
+                    QObject::tr("Rayon modifier.\n"
+                                "Click Cancel to exit."), QMessageBox::Cancel);
+
+    }
+    else
+        QMessageBox::critical(nullptr, QObject::tr("Modifier un rayon"),
+                    QObject::tr("Erreur !.\n"
+                                "Click Cancel to exit."), QMessageBox::Cancel);
+    player->stop();
+}
+
+
+
+void MainWindow::on_pushButton_Ajouter_t_clicked()
+{
+    player = new QMediaPlayer;
+    player->setMedia(QUrl::fromLocalFile("C:/Users/Occurence/Desktop/Swoosh sound effect.mp3"));
+    player->setVolume(50);
+    player->play();
+
+    int num = ui->lineEdit_ID_t->text().toInt();
+    QString date= ui->lineEdit_Date->text();
+
+    Ticket_caisse t(num,date);
+    bool test = t.Ajouter();
+
+
+    if(test)
+    {
+        ui->tableView_aff_t->setModel(tmpticket.Afficher());//refresh
+        QMessageBox::information(nullptr, QObject::tr("Ajouter un ticket"),
+                  QObject::tr("ticket ajouté.\n"
+                              "Click Cancel to exit."), QMessageBox::Cancel);
+
+    }
+    else{
+        QMessageBox::critical(nullptr, QObject::tr("Ajouter un ticket"),
+                  QObject::tr("Erreur !.\n"
+                              "Click Cancel to exit."), QMessageBox::Cancel);
+    }
+    player->stop();
+}
+
+void MainWindow::on_pushButton_supprimer_t_clicked()
+{
+    player = new QMediaPlayer;
+    player->setMedia(QUrl::fromLocalFile("C:/Users/Occurence/Desktop/Swoosh sound effect.mp3"));
+    player->setVolume(50);
+    player->play();
+
+    int id = ui->lineEdit_IDt_s->text().toInt();
+    bool test=tmpticket.Supprimer(id);
+    if(test)
+    {ui->tableView_aff_t->setModel(tmpticket.Afficher());//refresh
+        QMessageBox::information(nullptr, QObject::tr("Supprimer un ticket"),
+                    QObject::tr("Ticket supprimé.\n"
+                                "Click Cancel to exit."), QMessageBox::Cancel);
+
+    }
+    else
+        QMessageBox::critical(nullptr, QObject::tr("Supprimer un ticket"),
+                    QObject::tr("Erreur !.\n"
+                                "Click Cancel to exit."), QMessageBox::Cancel);
+    player->stop();
+}
+
+void MainWindow::on_pushButton_Ajouter_t_4_clicked()
+{
+    player = new QMediaPlayer;
+    player->setMedia(QUrl::fromLocalFile("C:/Users/Occurence/Desktop/Swoosh sound effect.mp3"));
+    player->setVolume(50);
+    player->play();
+
+    int id = ui->lineEdit_ID_t_r->text().toInt();
+    int idp = ui->lineEdit_p_v_4->text().toInt();
+    int quant= ui->lineEdit_quant_t_4->text().toInt();
+
+
+    Produit_vendue pv(idp,quant,id);
+    Produit p;
+    Ticket_caisse t;
+    bool test = pv.Ajouter_PV();
+    bool test1 = p.Mise_a_jour_Qantitee(idp,quant);
+    bool test2 = t.Mettre_a_jour_Ticket(idp,id,quant);
+
+
+    if(test && test1 && test2)
+    {
+        ui->tableView_p_v->setModel(tmpproduit_v.Afficher_PV());//refresh
+        ui->tableView_p->setModel(tmpproduit.Afficher());
+        ui->tableView_aff_t->setModel(tmpticket.Afficher());//refresh
+        QMessageBox::information(nullptr, QObject::tr("Ajouter un produit au ticket"),
+                  QObject::tr("Produit ajouté.\n"
+                              "Click Cancel to exit."), QMessageBox::Cancel);
+
+    }
+    else{
+        QMessageBox::critical(nullptr, QObject::tr("Ajouter un produit au ticket"),
+                  QObject::tr("Erreur !.\n"
+                              "Click Cancel to exit."), QMessageBox::Cancel);
+    }
+
+
+    player->stop();
+}
+
+void MainWindow::on_pushButton_recherche_2_clicked()
+{
+    player = new QMediaPlayer;
+    player->setMedia(QUrl::fromLocalFile("C:/Users/Occurence/Desktop/Swoosh sound effect.mp3"));
+    player->setVolume(50);
+    player->play();
+
+    QString id= ui->lineEdit_recherche_2->text();
+
+
+        ui->tableView_p->setModel(tmpproduit.Afficher_recherche(id));//refresh
+
+    player->stop();
+
+}
+
+
+void MainWindow::on_pushButton_recherche_clicked()
+{
+    player = new QMediaPlayer;
+    player->setMedia(QUrl::fromLocalFile("C:/Users/Occurence/Desktop/Swoosh sound effect.mp3"));
+    player->setVolume(50);
+    player->play();
+
+    QString id= ui->lineEdit_recherche->text();
+
+
+        ui->tableView_p_v->setModel(tmpproduit_v.Afficher_PV_recherche(id));//refresh
+
+    player->stop();
+}
+
+void MainWindow::on_pushButton_recherche_3_clicked()
+{
+    player = new QMediaPlayer;
+    player->setMedia(QUrl::fromLocalFile("C:/Users/Occurence/Desktop/Swoosh sound effect.mp3"));
+    player->setVolume(50);
+    player->play();
+
+    QString id= ui->lineEdit_recherche_3->text();
+
+
+        ui->tableView_c->setModel(tmpcaisse.Afficher_recherche(id));
+     player->stop();
+}
+
+void MainWindow::on_pushButton_recherche_4_clicked()
+{
+    player = new QMediaPlayer;
+    player->setMedia(QUrl::fromLocalFile("C:/Users/Occurence/Desktop/Swoosh sound effect.mp3"));
+    player->setVolume(50);
+    player->play();
+
+    QString id= ui->lineEdit_recherche_4->text();
+
+
+    ui->tableView_r->setModel(tmprayon.Afficher_recherche(id));
+
+    player->stop();
+}
+
+void MainWindow::on_pushButton_recherche_5_clicked()
+{
+    player = new QMediaPlayer;
+    player->setMedia(QUrl::fromLocalFile("C:/Users/Occurence/Desktop/Swoosh sound effect.mp3"));
+    player->setVolume(50);
+    player->play();
+
+    QString id= ui->lineEdit_recherche_5->text();
+
+
+    ui->tableView_aff_t->setModel(tmpticket.Afficher_recherche(id));
+
+    player->stop();
+
 }

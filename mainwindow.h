@@ -1,51 +1,66 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include"connexion.h"
-#include "facture.h"
+#include "toutes_les_fonctions.h"
 #include <QMainWindow>
+#include <QMediaPlayer>
 
-namespace Ui {
-class MainWindow;
-}
+QT_BEGIN_NAMESPACE
+namespace Ui { class MainWindow; }
+QT_END_NAMESPACE
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = nullptr);
+    MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
 private slots:
 
-    void on_Commander_3_clicked();
 
-    void on_pb_supprimer_5_clicked();
+    void on_pushButton_Ajouter_c_clicked();
 
-    void on_pb_modifier_commande_clicked();
+    void on_pushButton_Supprimer_c_clicked();
 
-    void on_pb_ajouter_facture_clicked();
+    void on_pushButton_Ajouter_r_clicked();
 
-    void on_pushButton_modifier_facture_clicked();
+    void on_pushButton_Supprimer_r_clicked();
 
-    void on_pb_supprimer_facture_clicked();
+    void on_pushButton_Ajouter_p_clicked();
 
-    void on_lineEdit_recherche_textChanged(const QString &arg1);
+    void on_pushButton_Supprimer_p_clicked();
 
-    void on_lineEdit_recherche_commande_textChanged(const QString &arg1);
+    void on_pushButton_Modifier_c_clicked();
 
-    void on_comboBox_currentTextChanged(const QString &arg1);
+    void on_pushButton_Modifier_p_clicked();
 
-    void on_lineEdit_Reference_12_textChanged(const QString &arg1);
+    void on_pushButton_Modifier_r_clicked();
 
-    void on_comboBox_4_currentTextChanged(const QString &arg1);
+    void on_pushButton_Ajouter_t_clicked();
 
-    void on_lineEdit_modifierID_commande_textChanged(const QString &arg1);
+    void on_pushButton_supprimer_t_clicked();
+
+    void on_pushButton_Ajouter_t_4_clicked();
+
+    void on_pushButton_recherche_2_clicked();
+
+    void on_pushButton_recherche_clicked();
+
+    void on_pushButton_recherche_3_clicked();
+
+    void on_pushButton_recherche_4_clicked();
+
+    void on_pushButton_recherche_5_clicked();
 
 private:
     Ui::MainWindow *ui;
-    Facture tmpFacture;
-    Commande tmpCommande;
+    QMediaPlayer * player;
+    Caisse tmpcaisse;
+    Rayon tmprayon;
+    Produit tmpproduit;
+    Produit_vendue tmpproduit_v;
+    Ticket_caisse tmpticket;
 };
 #endif // MAINWINDOW_H
