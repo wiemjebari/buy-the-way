@@ -7,7 +7,8 @@
 #include<QSqlError>
 #include<QThread>
 #include<QSortFilterProxyModel>
-
+#include"QPixmap"
+#include<caisseetrayon.h>
 
 fournisseuretstocks::fournisseuretstocks(QWidget *parent) :
     QDialog(parent),
@@ -17,12 +18,15 @@ fournisseuretstocks::fournisseuretstocks(QWidget *parent) :
     ui->tabfournisseur->setModel(tmpfournisseur.afficher());
      ui->tabproduit->setModel(tmpstocks.afficher());
      player= new QMediaPlayer(this);
+     comboboxMarque();
+
 }
 
 fournisseuretstocks::~fournisseuretstocks()
 {
     delete ui;
 }
+
 
 fournisseur::fournisseur()
 {
@@ -250,7 +254,57 @@ produit::produit(int id,double prix,QString marque)
   this->marque=marque;
 }
 
+float produit::Prix_DB_PV(int idd,int qant)
+{
 
+    QSqlQueryModel q;
+    q.setQuery("select * from produit");
+    float P;
+
+
+        for (int i = 0; i < q.rowCount(); i++) {
+            int id = q.record(i).value("ID").toInt();
+            if(id == idd)
+            {
+                P = q.record(i).value("PRIX").toFloat() * qant;
+                break;
+            }
+            else
+            {
+                P = 0;
+            }
+        }
+
+
+
+
+
+    return P;
+}
+
+int produit::Decrementer_quantitee_produit(int idd,int qant)
+{
+    QSqlQueryModel q;
+    q.setQuery("select * from produit");
+
+
+    int quant;
+    for (int i = 0; i < q.rowCount(); i++) {
+        int id = q.record(i).value("ID").toInt();
+        if(id == idd)
+        {
+            quant = q.record(i).value("QUANTITEE").toInt() - qant;
+            break;
+        }
+        else
+        {
+            quant = 0;
+        }
+    }
+
+
+    return quant;
+}
 
 
 QString produit::get_nom(){return  marque;}
@@ -306,7 +360,7 @@ bool produit::modifierProduit(int id, double prix, QString marque)
 void fournisseuretstocks::on_pushButton_ajout_2_clicked()
 {
     int id = ui->lineEdit_pid->text().toInt();
-    QString marque= ui->lineEdit_pnom->text();
+    QString marque= ui->comboBox->currentText();
     double prix = ui->lineEdit_prix->text().toDouble();
   produit p(id,prix,marque);
   bool test=p.ajouter();
@@ -320,7 +374,7 @@ void fournisseuretstocks::on_pushButton_ajout_2_clicked()
                   QObject::tr("Produit ajouté.\n"
                               "Click Cancel to exit."), QMessageBox::Cancel);
       ui->lineEdit_pid->clear();
-      ui->lineEdit_pnom->clear();
+      ui->comboBox->clear();
       ui->lineEdit_prix->clear();
 
 }
@@ -413,55 +467,6 @@ QSqlQueryModel * fournisseur::Afficher_recherche(QString idd)
 }
 
 
-void fournisseuretstocks::on_buttonBox_4_accepted()
-{
-    QSqlQuery query;
-    player->setMedia(QUrl::fromLocalFile("C:/Users/user/Desktop/Projet/click.mp3"));
-    player->play();
-    qDebug()<<player->errorString();
-    QThread::sleep(1);
-        QString search=ui->lineEdit_fid_6->text();
-        qDebug()<<"Search: "<<search;
-        qDebug()<<search;
-        search =search+"%";
-        query.prepare("select * from produit where (IDENTIFIANT LIKE :search)");
-        query.bindValue(":search",search);
-        if(!query.exec()){
-            qDebug()<<"Query error: "<<query.lastError();
-        }
-        QSqlQueryModel *modal =new QSqlQueryModel();
-        modal->setQuery(query);
-        qDebug()<<modal->rowCount();
-        ui->tabproduit_2->setModel(modal);
-       ui->lineEdit_fid_6->clear();
-
-}
-
-void fournisseuretstocks::on_buttonBox_accepted()
-{
-    QSqlQuery query;
-    player->setMedia(QUrl::fromLocalFile("C:/Users/user/Desktop/Projet/click.mp3"));
-    player->play();
-    qDebug()<<player->errorString();
-    QThread::sleep(1);
-        QString search=ui->lineEdit_fid_4->text();
-        qDebug()<<"Search: "<<search;
-        qDebug()<<search;
-        search =search+"%";
-        query.prepare("select * from fournisseur where (IDENTIFIANT LIKE :search)");
-        query.bindValue(":search",search);
-        if(!query.exec()){
-            qDebug()<<"Query error: "<<query.lastError();
-        }
-        QSqlQueryModel *modal =new QSqlQueryModel();
-        modal->setQuery(query);
-        qDebug()<<modal->rowCount();
-        ui->tabfournisseur_2->setModel(modal);
-       ui->lineEdit_fid_4->clear();
-
-}
-
-
 
 void fournisseuretstocks::on_pushButton_3_clicked()
 {
@@ -515,4 +520,51 @@ void fournisseuretstocks::on_pushButton_5_clicked()
     m->setSourceModel(model);
     ui->tabproduit->setModel(m);
     ui->tabproduit->setSortingEnabled(true);
+}
+
+void fournisseuretstocks::comboboxMarque()
+{
+    QSqlQuery query;
+    query.prepare("select MARQUE from produit");
+    query.exec();
+    QSqlQueryModel *modal =new QSqlQueryModel();
+    modal->setQuery(query);
+    qDebug()<<modal->rowCount();
+    ui->comboBox->setModel(modal);
+}
+
+void fournisseuretstocks::on_lineEdit_fid_4_textChanged(const QString &arg1)
+{
+
+    QSqlQuery query;
+        QString search=ui->lineEdit_fid_4->text();
+        search =search+"%";
+        query.prepare("select * from fournisseur where (IDENTIFIANT LIKE :search)");
+        query.bindValue(":search",search);
+        if(!query.exec()){
+            qDebug()<<"Query error: "<<query.lastError();
+        }
+        QSqlQueryModel *modal =new QSqlQueryModel();
+        modal->setQuery(query);
+        qDebug()<<modal->rowCount();
+        ui->tabfournisseur_2->setModel(modal);
+
+}
+
+
+void fournisseuretstocks::on_lineEdit_fid_6_textChanged(const QString &arg1)
+{
+    QSqlQuery query;
+        QString search=ui->lineEdit_fid_6->text();
+        search =search+"%";
+        query.prepare("select * from produit where (IDENTIFIANT LIKE :search)");
+        query.bindValue(":search",search);
+        if(!query.exec()){
+            qDebug()<<"Query error: "<<query.lastError();
+        }
+        QSqlQueryModel *modal =new QSqlQueryModel();
+        modal->setQuery(query);
+        qDebug()<<modal->rowCount();
+        ui->tabproduit_2->setModel(modal);
+
 }
