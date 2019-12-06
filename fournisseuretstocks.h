@@ -39,6 +39,9 @@ public:
     bool supprimer(int);
     bool modifierProduit(int,double,QString);
     QSqlQueryModel * Afficher_recherche(QString idd);
+    float Prix_DB_PV(int,int);
+    int Decrementer_quantitee_produit(int,int);
+    bool Mise_a_jour_Qantitee(int,int);
 private:
     QString marque;
     int id;
@@ -59,6 +62,7 @@ public:
         bool controleEmail(QString);
         bool controlenum(int test);
         QMediaPlayer* player;
+        void comboboxMarque();
 
 private slots:
     void on_pushButton_ajout_clicked();
@@ -76,16 +80,19 @@ private slots:
 
 
 
- void on_buttonBox_4_accepted();
-
- void on_buttonBox_accepted();
-
-
  void on_pushButton_3_clicked();
 
  void on_pushButton_4_clicked();
 
  void on_pushButton_5_clicked();
+
+ void on_lineEdit_fid_4_textChanged(const QString &arg1);
+
+ void on_lineEdit_fid_6_textChanged(const QString &arg1);
+
+ void on_pushButton_6_clicked();
+
+ void on_pushButton_7_clicked();
 
 private:
     Ui::fournisseuretstocks *ui;

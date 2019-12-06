@@ -6,21 +6,34 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>679</width>
-    <height>461</height>
+    <width>727</width>
+    <height>455</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(0, 0, 76);
+border-radius: 10px;</string>
+  </property>
   <widget class="QTabWidget" name="tabWidget_2">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>50</y>
+     <x>30</x>
+     <y>40</y>
      <width>661</width>
-     <height>311</height>
+     <height>341</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
    </property>
    <property name="currentIndex">
     <number>0</number>
@@ -33,13 +46,19 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>0</y>
+       <y>10</y>
        <width>641</width>
        <height>241</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
      <property name="currentIndex">
-      <number>3</number>
+      <number>0</number>
      </property>
      <property name="tabBarAutoHide">
       <bool>true</bool>
@@ -96,6 +115,12 @@
          <height>20</height>
         </rect>
        </property>
+       <property name="styleSheet">
+        <string notr="true">border-radius:10px;</string>
+       </property>
+       <property name="clearButtonEnabled">
+        <bool>true</bool>
+       </property>
       </widget>
       <widget class="QLineEdit" name="lineEdit_nom">
        <property name="geometry">
@@ -106,6 +131,9 @@
          <height>20</height>
         </rect>
        </property>
+       <property name="styleSheet">
+        <string notr="true">border-radius:10px;</string>
+       </property>
       </widget>
       <widget class="QLineEdit" name="lineEdit_prenom">
        <property name="geometry">
@@ -115,6 +143,9 @@
          <width>113</width>
          <height>20</height>
         </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">border-radius:10px;</string>
        </property>
       </widget>
       <widget class="QPushButton" name="pb_ajouter">
@@ -130,16 +161,6 @@
         <string>Ajouter</string>
        </property>
       </widget>
-      <widget class="QLineEdit" name="lineEdit_poste">
-       <property name="geometry">
-        <rect>
-         <x>130</x>
-         <y>150</y>
-         <width>113</width>
-         <height>20</height>
-        </rect>
-       </property>
-      </widget>
       <widget class="QLabel" name="label_6">
        <property name="geometry">
         <rect>
@@ -153,6 +174,41 @@
         <string>Poste</string>
        </property>
       </widget>
+      <widget class="QComboBox" name="comboBox">
+       <property name="geometry">
+        <rect>
+         <x>130</x>
+         <y>150</y>
+         <width>121</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <item>
+        <property name="text">
+         <string>caissier</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>comptable</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>resources_humaines</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>agent</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>commercial</string>
+        </property>
+       </item>
+      </widget>
      </widget>
      <widget class="QWidget" name="tab_2">
       <attribute name="title">
@@ -161,7 +217,7 @@
       <widget class="QTableView" name="tabemploye">
        <property name="geometry">
         <rect>
-         <x>20</x>
+         <x>110</x>
          <y>40</y>
          <width>361</width>
          <height>151</height>
@@ -176,21 +232,33 @@
       <widget class="QLineEdit" name="lineEdit_CIN_2">
        <property name="geometry">
         <rect>
-         <x>140</x>
-         <y>30</y>
+         <x>260</x>
+         <y>80</y>
          <width>113</width>
          <height>20</height>
         </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">border-radius:10px;</string>
+       </property>
+       <property name="clearButtonEnabled">
+        <bool>true</bool>
        </property>
       </widget>
       <widget class="QLabel" name="label_4">
        <property name="geometry">
         <rect>
-         <x>20</x>
+         <x>270</x>
          <y>30</y>
          <width>81</width>
          <height>16</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
        </property>
        <property name="text">
         <string>CIN de l'employé</string>
@@ -199,8 +267,8 @@
       <widget class="QPushButton" name="pb_supprimer">
        <property name="geometry">
         <rect>
-         <x>310</x>
-         <y>180</y>
+         <x>280</x>
+         <y>160</y>
          <width>75</width>
          <height>23</height>
         </rect>
@@ -217,11 +285,23 @@
       <widget class="QLineEdit" name="lineEdit_CIN_3">
        <property name="geometry">
         <rect>
-         <x>100</x>
+         <x>120</x>
          <y>40</y>
          <width>113</width>
          <height>20</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">border-radius:10px;</string>
+       </property>
+       <property name="clearButtonEnabled">
+        <bool>true</bool>
        </property>
       </widget>
       <widget class="QPushButton" name="pb_recherche">
@@ -233,6 +313,12 @@
          <height>23</height>
         </rect>
        </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
        <property name="text">
         <string>chercher</string>
        </property>
@@ -242,9 +328,15 @@
         <rect>
          <x>10</x>
          <y>40</y>
-         <width>81</width>
+         <width>101</width>
          <height>16</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
        </property>
        <property name="text">
         <string>CIN de l'employé</string>
@@ -258,6 +350,12 @@
          <width>361</width>
          <height>151</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
        </property>
       </widget>
      </widget>
@@ -274,6 +372,12 @@
          <height>13</height>
         </rect>
        </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
        <property name="text">
         <string>Nom</string>
        </property>
@@ -287,8 +391,20 @@
          <height>20</height>
         </rect>
        </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">border-radius:10px;</string>
+       </property>
        <property name="text">
         <string/>
+       </property>
+       <property name="clearButtonEnabled">
+        <bool>true</bool>
        </property>
       </widget>
       <widget class="QLabel" name="label_8">
@@ -299,6 +415,12 @@
          <width>61</width>
          <height>16</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
        </property>
        <property name="text">
         <string>CIN</string>
@@ -313,6 +435,12 @@
          <height>23</height>
         </rect>
        </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
        <property name="text">
         <string>modifier</string>
        </property>
@@ -326,8 +454,20 @@
          <height>20</height>
         </rect>
        </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">border-radius:10px;</string>
+       </property>
        <property name="text">
         <string/>
+       </property>
+       <property name="clearButtonEnabled">
+        <bool>true</bool>
        </property>
       </widget>
       <widget class="QLineEdit" name="lineEdit_nom_2">
@@ -339,8 +479,20 @@
          <height>20</height>
         </rect>
        </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">border-radius:10px;</string>
+       </property>
        <property name="text">
         <string/>
+       </property>
+       <property name="clearButtonEnabled">
+        <bool>true</bool>
        </property>
       </widget>
       <widget class="QLineEdit" name="lineEdit_prenom_4">
@@ -352,8 +504,20 @@
          <height>20</height>
         </rect>
        </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">border-radius:10px;</string>
+       </property>
        <property name="text">
         <string/>
+       </property>
+       <property name="clearButtonEnabled">
+        <bool>true</bool>
        </property>
       </widget>
       <widget class="QLabel" name="label_9">
@@ -364,6 +528,12 @@
          <width>47</width>
          <height>13</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
        </property>
        <property name="text">
         <string>Prénom</string>
@@ -377,6 +547,12 @@
          <width>47</width>
          <height>13</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
        </property>
        <property name="text">
         <string>Poste</string>

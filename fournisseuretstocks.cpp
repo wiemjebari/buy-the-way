@@ -9,6 +9,11 @@
 #include<QSortFilterProxyModel>
 #include"QPixmap"
 #include<caisseetrayon.h>
+#include<QTextDocument>
+#include<QtPrintSupport/QPrinter>
+#include<QtPrintSupport/QPrintDialog>
+#include<QDate>
+
 
 fournisseuretstocks::fournisseuretstocks(QWidget *parent) :
     QDialog(parent),
@@ -17,6 +22,8 @@ fournisseuretstocks::fournisseuretstocks(QWidget *parent) :
     ui->setupUi(this);
     ui->tabfournisseur->setModel(tmpfournisseur.afficher());
      ui->tabproduit->setModel(tmpstocks.afficher());
+     ui->tabfournisseur_3->setModel(tmpfournisseur.afficher());
+     ui->tabproduit_3->setModel(tmpstocks.afficher());
      player= new QMediaPlayer(this);
      comboboxMarque();
 
@@ -90,7 +97,7 @@ void fournisseuretstocks::on_pushButton_ajout_clicked()
     qDebug()<<player->errorString();
     QThread::sleep(1);
        int id =ui->lineEdit_fid->text().toInt();
-       QString produit= ui->lineEdit_fproduit->text();
+       QString produit= ui->comboBox_3->currentText();
        QString email= ui->lineEdit_femail->text();
        int num = ui->lineEdit_fnum->text().toInt();
         bool test1=(controleEmail(email)&&controlenum(num));
@@ -110,7 +117,6 @@ void fournisseuretstocks::on_pushButton_ajout_clicked()
                      QObject::tr("Fournisseur ajouté.\n"
                                  "Click Cancel to exit."), QMessageBox::Cancel);
             ui->lineEdit_fid->clear();
-            ui->lineEdit_fproduit->clear();
             ui->lineEdit_femail->clear();
             ui->lineEdit_fnum->clear();
 
@@ -168,7 +174,7 @@ bool fournisseuretstocks::controlenum(int test)
 
 void fournisseuretstocks::on_pushButton_modif_clicked()
 {     int id = ui->lineEdit_fid_2->text().toInt();
-     QString produit= ui->lineEdit_fproduit_2->text();
+     QString produit= ui->comboBox_4->currentText();
     QString email= ui->lineEdit_femail_2->text();
     int num = ui->lineEdit_fnum_2->text().toInt();
     fournisseur f;
@@ -188,7 +194,6 @@ void fournisseuretstocks::on_pushButton_modif_clicked()
                                 "Click Cancel to exit."), QMessageBox::Cancel);
         ui->tabfournisseur->setModel(tmpfournisseur.afficher());
         ui->lineEdit_fid_2->clear();
-        ui->lineEdit_fproduit_2->clear();
         ui->lineEdit_femail_2->clear();
         ui->lineEdit_fnum_2->clear();
 
@@ -390,7 +395,7 @@ void fournisseuretstocks::on_pushButton_ajout_2_clicked()
 void fournisseuretstocks::on_pushButton_modif_2_clicked()
 {
     int id = ui->lineEdit_pid_2->text().toInt();
-    QString marque= ui->lineEdit_pnom_2->text();
+    QString marque= ui->comboBox_2->currentText();
     double prix = ui->lineEdit_prix_2->text().toDouble();
     produit p;
     bool test=p.modifierProduit(id,prix,marque);
@@ -405,7 +410,7 @@ void fournisseuretstocks::on_pushButton_modif_2_clicked()
                                 "Click Cancel to exit."), QMessageBox::Cancel);
         ui->tabproduit->setModel(tmpstocks.afficher());
         ui->lineEdit_pid_2->clear();
-        ui->lineEdit_pnom_2->clear();
+
         ui->lineEdit_prix_2->clear();
 
     }
@@ -478,7 +483,7 @@ void fournisseuretstocks::on_pushButton_3_clicked()
                   {
                       while(query.next())
                       {
-                          ui->lineEdit_fproduit_2->setText(query.value(1).toString());
+                          //ui->lineEdit_fproduit_2->setText(query.value(1).toString());
                           ui->lineEdit_femail_2->setText(query.value(2).toString());
                           ui->lineEdit_fnum_2->setText(query.value(3).toString());
                       }
@@ -531,6 +536,9 @@ void fournisseuretstocks::comboboxMarque()
     modal->setQuery(query);
     qDebug()<<modal->rowCount();
     ui->comboBox->setModel(modal);
+    ui->comboBox_2->setModel(modal);
+    ui->comboBox_3->setModel(modal);
+    ui->comboBox_4->setModel(modal);
 }
 
 void fournisseuretstocks::on_lineEdit_fid_4_textChanged(const QString &arg1)
@@ -567,4 +575,110 @@ void fournisseuretstocks::on_lineEdit_fid_6_textChanged(const QString &arg1)
         qDebug()<<modal->rowCount();
         ui->tabproduit_2->setModel(modal);
 
+}
+
+
+void fournisseuretstocks::on_pushButton_6_clicked()
+{
+    QString strStream;
+                QTextStream out(&strStream);
+
+                const int rowCount = ui->tabfournisseur_3->model()->rowCount();
+                const int columnCount = ui->tabfournisseur_3->model()->columnCount();
+                QString TT = QDate::currentDate().toString("yyyy/MM/dd");
+                out <<"<html>\n"
+                      "<head>\n"
+                       "<meta Content=\"Text/html; charset=Windows-1251\">\n"
+                    << "<title>ERP - COMmANDE LIST<title>\n "
+                    << "</head>\n"
+                    "<body bgcolor=#ffffff link=#5000A0>\n"
+                    "<h1 style=\"text-align: center;\"><strong> ******LISTE DES Réservations ****** "+TT+"</strong></h1>"
+                    "<table style=\"text-align: center; font-size: 20px;\" border=1>\n "
+                      "</br> </br>";
+                // headers
+                out << "<thead><tr bgcolor=#d6e5ff>";
+                for (int column = 0; column < columnCount; column++)
+                    if (!ui->tabfournisseur_3->isColumnHidden(column))
+                        out << QString("<th>%1</th>").arg(ui->tabfournisseur_3->model()->headerData(column, Qt::Horizontal).toString());
+                out << "</tr></thead>\n";
+
+                // data table
+                for (int row = 0; row < rowCount; row++) {
+                    out << "<tr>";
+                    for (int column = 0; column < columnCount; column++) {
+                        if (!ui->tabfournisseur_3->isColumnHidden(column)) {
+                            QString data =ui->tabfournisseur_3->model()->data(ui->tabfournisseur_3->model()->index(row, column)).toString().simplified();
+                            out << QString("<td bkcolor=0>%1</td>").arg((!data.isEmpty()) ? data : QString("&nbsp;"));
+                        }
+                    }
+                    out << "</tr>\n";
+                }
+                out <<  "</table>\n"
+                    "</body>\n"
+                    "</html>\n";
+
+                QTextDocument *document = new QTextDocument();
+                document->setHtml(strStream);
+
+                QPrinter printer;
+
+                QPrintDialog *dialog = new QPrintDialog(&printer, NULL);
+                if (dialog->exec() == QDialog::Accepted) {
+                    document->print(&printer);
+                }
+
+                delete document;
+
+}
+
+void fournisseuretstocks::on_pushButton_7_clicked()
+{
+    QString strStream;
+                QTextStream out(&strStream);
+
+                const int rowCount = ui->tabproduit_3->model()->rowCount();
+                const int columnCount = ui->tabproduit_3->model()->columnCount();
+                QString TT = QDate::currentDate().toString("yyyy/MM/dd");
+                out <<"<html>\n"
+                      "<head>\n"
+                       "<meta Content=\"Text/html; charset=Windows-1251\">\n"
+                    << "<title>ERP - COMmANDE LIST<title>\n "
+                    << "</head>\n"
+                    "<body bgcolor=#ffffff link=#5000A0>\n"
+                    "<h1 style=\"text-align: center;\"><strong> ******LISTE DES Réservations ****** "+TT+"</strong></h1>"
+                    "<table style=\"text-align: center; font-size: 20px;\" border=1>\n "
+                      "</br> </br>";
+                // headers
+                out << "<thead><tr bgcolor=#d6e5ff>";
+                for (int column = 0; column < columnCount; column++)
+                    if (!ui->tabproduit_3->isColumnHidden(column))
+                        out << QString("<th>%1</th>").arg(ui->tabproduit_3->model()->headerData(column, Qt::Horizontal).toString());
+                out << "</tr></thead>\n";
+
+                // data table
+                for (int row = 0; row < rowCount; row++) {
+                    out << "<tr>";
+                    for (int column = 0; column < columnCount; column++) {
+                        if (!ui->tabproduit_3->isColumnHidden(column)) {
+                            QString data =ui->tabproduit_3->model()->data(ui->tabproduit_3->model()->index(row, column)).toString().simplified();
+                            out << QString("<td bkcolor=0>%1</td>").arg((!data.isEmpty()) ? data : QString("&nbsp;"));
+                        }
+                    }
+                    out << "</tr>\n";
+                }
+                out <<  "</table>\n"
+                    "</body>\n"
+                    "</html>\n";
+
+                QTextDocument *document = new QTextDocument();
+                document->setHtml(strStream);
+
+                QPrinter printer;
+
+                QPrintDialog *dialog = new QPrintDialog(&printer, NULL);
+                if (dialog->exec() == QDialog::Accepted) {
+                    document->print(&printer);
+                }
+
+                delete document;
 }

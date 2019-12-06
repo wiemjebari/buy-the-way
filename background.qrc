@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/">
+        <file>../25461_hd-images-for-website-background.png</file>
+        <file>../istockphoto-995719694-612x612.jpg</file>
+        <file>../delete.png</file>
+        <file>../printer.png</file>
+        <file>../add-file.png</file>
+        <file>../cloud.png</file>
+        <file>../smartphone.png</file>
+        <file>../pie-chart.png</file>
+        <file>../logo entreprise.png</file>
+    </qresource>
+</RCC>
