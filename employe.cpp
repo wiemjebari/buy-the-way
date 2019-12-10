@@ -2,11 +2,18 @@
 #include "ui_employe.h"
 #include <QDebug>
 #include <QMessageBox>
+#include<QTextDocument>
+#include<QtPrintSupport/QPrinter>
+#include<QtPrintSupport/QPrintDialog>
+#include<QDate>
 employe::employe(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::employe)
 {
     ui->setupUi(this);
+    ui->tabemploye->setModel(tmpemploye.afficher());
+    ui->tabemploye_2->setModel(tmpemploye.afficher());
+
 }
 
 employe::~employe()
@@ -225,3 +232,55 @@ int ge::verifier_statut(QString identifiant,QString mdp)
 
 
 
+
+void employe::on_pushButton_clicked()
+{
+
+    QString strStream;
+                QTextStream out(&strStream);
+
+                const int rowCount = ui->tabemploye->model()->rowCount();
+                const int columnCount = ui->tabemploye->model()->columnCount();
+                out <<"<html>\n"
+                      "<head>\n"
+                       "<meta Content=\"Text/html; charset=Windows-1251\">\n"
+                    << "<title>ERP - COMmANDE LIST<title>\n "
+                    << "</head>\n"
+                    "<body bgcolor=#ffffff link=#5000A0>\n"
+
+                       "<table style=\"text-align: center; font-size: 20px;\" border=1>\n "
+                      "</br> </br>";
+                // headers
+                out << "<thead><tr bgcolor=#d6e5ff>";
+                for (int column = 0; column < columnCount; column++)
+                    if (!ui->tabemploye->isColumnHidden(column))
+                        out << QString("<th>%1</th>").arg(ui->tabemploye->model()->headerData(column, Qt::Horizontal).toString());
+                out << "</tr></thead>\n";
+
+                // data table
+                for (int row = 0; row < rowCount; row++) {
+                    out << "<tr>";
+                    for (int column = 0; column < columnCount; column++) {
+                        if (!ui->tabemploye->isColumnHidden(column)) {
+                            QString data =ui->tabemploye->model()->data(ui->tabemploye->model()->index(row, column)).toString().simplified();
+                            out << QString("<td bkcolor=0>%1</td>").arg((!data.isEmpty()) ? data : QString("&nbsp;"));
+                        }
+                    }
+                    out << "</tr>\n";
+                }
+                out <<  "</table>\n"
+                    "</body>\n"
+                    "</html>\n";
+
+                QTextDocument *document = new QTextDocument();
+                document->setHtml(strStream);
+
+                QPrinter printer;
+
+                QPrintDialog *dialog = new QPrintDialog(&printer, nullptr);
+                if (dialog->exec() == QDialog::Accepted) {
+                    document->print(&printer);
+                }
+
+                delete document;
+}

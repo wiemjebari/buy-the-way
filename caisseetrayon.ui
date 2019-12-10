@@ -438,9 +438,16 @@ background-color: rgb(255, 255, 255);</string>
         <rect>
          <x>40</x>
          <y>50</y>
-         <width>121</width>
+         <width>151</width>
          <height>16</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
        </property>
        <property name="text">
         <string>Saisir l'ID de la caisse</string>
@@ -449,7 +456,7 @@ background-color: rgb(255, 255, 255);</string>
       <widget class="QLineEdit" name="lineEdit_ID_s">
        <property name="geometry">
         <rect>
-         <x>192</x>
+         <x>260</x>
          <y>50</y>
          <width>161</width>
          <height>20</height>
@@ -500,7 +507,7 @@ background-color: rgb(255, 255, 255);</string>
       </font>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>3</number>
      </property>
      <widget class="QWidget" name="tab_4">
       <attribute name="title">
@@ -1104,7 +1111,7 @@ background-color: rgb(255, 255, 255);</string>
       <string notr="true">background-color: rgb(214, 214, 214);</string>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>3</number>
      </property>
      <widget class="QWidget" name="tab_17">
       <attribute name="title">

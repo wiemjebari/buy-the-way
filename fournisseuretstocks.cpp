@@ -13,6 +13,7 @@
 #include<QtPrintSupport/QPrinter>
 #include<QtPrintSupport/QPrintDialog>
 #include<QDate>
+#include"calculatrice.h"
 
 
 fournisseuretstocks::fournisseuretstocks(QWidget *parent) :
@@ -365,7 +366,7 @@ bool produit::modifierProduit(int id, double prix, QString marque)
 void fournisseuretstocks::on_pushButton_ajout_2_clicked()
 {
     int id = ui->lineEdit_pid->text().toInt();
-    QString marque= ui->comboBox->currentText();
+    QString marque= ui->lineEdit_marque->text();
     double prix = ui->lineEdit_prix->text().toDouble();
   produit p(id,prix,marque);
   bool test=p.ajouter();
@@ -379,7 +380,7 @@ void fournisseuretstocks::on_pushButton_ajout_2_clicked()
                   QObject::tr("Produit ajouté.\n"
                               "Click Cancel to exit."), QMessageBox::Cancel);
       ui->lineEdit_pid->clear();
-      ui->comboBox->clear();
+      ui->lineEdit_marque->clear();
       ui->lineEdit_prix->clear();
 
 }
@@ -395,7 +396,7 @@ void fournisseuretstocks::on_pushButton_ajout_2_clicked()
 void fournisseuretstocks::on_pushButton_modif_2_clicked()
 {
     int id = ui->lineEdit_pid_2->text().toInt();
-    QString marque= ui->comboBox_2->currentText();
+    QString marque= ui->lineEdit_marque2->text();
     double prix = ui->lineEdit_prix_2->text().toDouble();
     produit p;
     bool test=p.modifierProduit(id,prix,marque);
@@ -410,7 +411,7 @@ void fournisseuretstocks::on_pushButton_modif_2_clicked()
                                 "Click Cancel to exit."), QMessageBox::Cancel);
         ui->tabproduit->setModel(tmpstocks.afficher());
         ui->lineEdit_pid_2->clear();
-
+        ui->lineEdit_marque2->clear();
         ui->lineEdit_prix_2->clear();
 
     }
@@ -535,8 +536,6 @@ void fournisseuretstocks::comboboxMarque()
     QSqlQueryModel *modal =new QSqlQueryModel();
     modal->setQuery(query);
     qDebug()<<modal->rowCount();
-    ui->comboBox->setModel(modal);
-    ui->comboBox_2->setModel(modal);
     ui->comboBox_3->setModel(modal);
     ui->comboBox_4->setModel(modal);
 }
@@ -681,4 +680,51 @@ void fournisseuretstocks::on_pushButton_7_clicked()
                 }
 
                 delete document;
+}
+
+void fournisseuretstocks::on_pushButton_clicked()
+{
+    calculatrice c;
+    c.setModal(true);
+    c.exec();
+
+}
+
+void fournisseuretstocks::on_pushButton_2_clicked()
+{
+    calculatrice c;
+    c.setModal(true);
+    c.exec();
+}
+
+
+
+void fournisseuretstocks::on_pushButton_8_clicked()
+{
+    int id = ui->lineEdit_pid_2->text().toInt();
+         QString val= QString::number(id);
+           QSqlQuery query;
+           query.prepare("SELECT * from produit where IDENTIFIANT='"+val+"'");
+                  if(query.exec())
+                  {
+                      while(query.next())
+                      {
+                          ui->lineEdit_marque2->setText(query.value(1).toString());
+                          ui->lineEdit_pid_2->setText(query.value(2).toString());
+                          ui->lineEdit_prix_2->setText(query.value(0).toString());
+                          qDebug()<<query.value(1);
+                          qDebug()<<query.value(2);
+                          qDebug()<<query.value(3);
+
+
+
+                      }
+
+                  }
+                  else
+                  {
+                      QMessageBox::critical(nullptr, QObject::tr("Chercher fournisseur!"),
+                                            QObject::tr("Erreur!.\n"
+                                                        "Click Cancel to exit."), QMessageBox::Cancel);
+                  }
 }

@@ -52,6 +52,8 @@ private slots:
 
     void on_pb_modifier_clicked();
 
+    void on_pushButton_clicked();
+
 private:
     Ui::employe *ui;
     ge tmpemploye;

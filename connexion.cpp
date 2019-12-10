@@ -16,7 +16,6 @@ bool connexion::createconnect()
     db.setDatabaseName("Source_Projet");
     db.setUserName("eya");//inserer nom de l'utilisateur
     db.setPassword("esprit19");//inserer mot de passe de cet utilisateur
-
     if (db.open())
     { test=true;}
 

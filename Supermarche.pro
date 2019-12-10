@@ -19,6 +19,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     caisseetrayon.cpp \
+    calculatrice.cpp \
     connexion.cpp \
     employe.cpp \
     facture.cpp \
@@ -29,6 +30,7 @@ SOURCES += \
 
 HEADERS += \
     caisseetrayon.h \
+    calculatrice.h \
     connexion.h \
     employe.h \
     facture.h \
@@ -38,6 +40,7 @@ HEADERS += \
 
 FORMS += \
     caisseetrayon.ui \
+    calculatrice.ui \
     employe.ui \
     facture.ui \
     fournisseuretstocks.ui \
