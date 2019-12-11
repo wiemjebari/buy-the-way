@@ -1,8 +1,8 @@
 QT       += core gui
 QT       += core gui sql
 QT       += core gui multimedia
-QT       += core gui serialport
 QT += printsupport
+QT += serialport
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 CONFIG += console
 CONFIG += c++11

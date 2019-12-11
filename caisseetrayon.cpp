@@ -3,6 +3,8 @@
 #include<fournisseuretstocks.h>
 #include<QMessageBox>
 #include <QDebug>
+#include <QtSerialPort/QSerialPortInfo>
+#include<QFile>
 caisseetrayon::caisseetrayon(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::caisseetrayon)
@@ -83,7 +85,6 @@ caisseetrayon::~caisseetrayon()
     }
     delete ui;
 }
-
 void caisseetrayon::Alert_Fournisseur(int id,int qant)
 {
             if(readSerial() == "off")
@@ -107,7 +108,6 @@ QByteArray caisseetrayon::readSerial()
     }
     return  data;
 }
-
 
 Caisse::Caisse()
 {
@@ -235,32 +235,6 @@ QSqlQueryModel * Produit_vendue::Afficher_PV_recherche(QString idd)
     model->setHeaderData(1, Qt::Horizontal, QObject::tr("Num_ticket"));
     model->setHeaderData(2, Qt::Horizontal, QObject::tr("Quantitee"));
         return model;
-}
-
-int Produit_vendue::Verification_quantitee(int idd)
-{
-    QSqlQueryModel q;
-    q.setQuery("select * from produit");
-
-
-    int qant;
-    for (int i = 0; i < q.rowCount(); i++) {
-        int id = q.record(i).value("ID").toInt();
-
-        if(id == idd)
-        {
-            qant = q.record(i).value("QUANTITEE").toInt();
-            break;
-        }
-        else
-        {
-            qant = 0;
-        }
-    }
-
-
-    return qant;
-
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -636,24 +610,6 @@ void caisseetrayon::on_pushButton_Ajouter_t_4_clicked()
     }
 
     pv.calculer_prix(idp);
-
-    if(pv.Verification_quantitee(idp) < 10 && pv.Verification_quantitee(idp) >= 5)
-    {
-        arduino->write("1");
-        if(readSerial()=="off")
-        {
-            qDebug()<<readSerial();
-            Alert_Fournisseur(idp,quant);
-        }
-    }
-
-    if(pv.Verification_quantitee(idp) < 5 )
-    {
-        arduino->write("2");
-        Alert_Fournisseur(idp,quant);
-
-    }
-
 }
 
 

@@ -4,8 +4,6 @@
 #include <QSqlQuery>
 #include <QSqlQueryModel>
 #include <QDialog>
-#include <QSerialPort>
-#include <QSerialPortInfo>
 
 
 class Facture
@@ -61,6 +59,7 @@ private:
 namespace Ui {
 class facture;
 }
+class QSerialPort;
 
 class facture : public QDialog
 {
@@ -105,14 +104,8 @@ private:
     Ui::facture *ui;
     Facture tmpFacture;
     Commande tmpCommande;
+    QSerialPort *arduino;
 
-    QSerialPort * arduino;
-
-    static const qint16 arduino_uno_vendor_ID = 9025;
-    static const qint16 arduino_uno_product_ID = 67;
-
-    QString arduino_port_name;
-    bool arduino_is_available;
 };
 
 #endif // FACTURE_H

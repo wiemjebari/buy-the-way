@@ -5,11 +5,9 @@
 #include <QSqlQuery>
 #include <QSqlQueryModel>
 #include <QSqlRecord>
-#include <QSerialPort>
-#include <QSerialPortInfo>
-#include <QFile>
 #include<QSound>
 #include "fournisseuretstocks.h"
+#include <QtSerialPort/QSerialPort>
 class Caisse
 {
 private:
@@ -48,8 +46,6 @@ public:
     int get_Prix(){return Prix;}
 
     void calculer_prix(int);
-
-    int Verification_quantitee(int);
 };
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -141,6 +137,7 @@ private:
     Produit_vendue tmpproduit_v;
     Ticket_caisse tmpticket;
 
+
     QSerialPort * arduino;
 
     static const qint16 arduino_uno_vendor_ID = 9025;
@@ -150,7 +147,6 @@ private:
     bool arduino_is_available;
 
     QByteArray data;
-
 
 };
 

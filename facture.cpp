@@ -2,6 +2,7 @@
 #include "ui_facture.h"
 #include"QMessageBox"
 #include<QDebug>
+#include <QtSerialPort/QSerialPort>
 facture::facture(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::facture)
@@ -34,61 +35,23 @@ facture::facture(QWidget *parent) :
     ui->comboBox_3->addItem("Maison/Jardin");
     ui->comboBox_3->addItem("H.T/Electro");
     ui->comboBox_3->addItem("Textile");
+    arduino = new QSerialPort();
+    arduino->setPortName("COM6");
+    arduino->open(QSerialPort::WriteOnly);
+    arduino->setBaudRate(QSerialPort::Baud9600);
+    arduino->setDataBits(QSerialPort::Data8);
+    arduino->setParity(QSerialPort::NoParity);
+    arduino->setStopBits(QSerialPort::OneStop);
+    arduino->setFlowControl(QSerialPort::NoFlowControl);
+    arduino->open(QIODevice::WriteOnly);
     comboBox_commandeMarque();
     comboBox_5Marque();
-
-    arduino = new QSerialPort;
-
-    arduino_port_name = "";
-    arduino_is_available = false;
-
-    /*for (QSerialPortInfo info : QSerialPortInfo::availablePorts())
-    {
-       qDebug() << "Port Name   :" << info.portName();
-       qDebug() << "Description :" << info.description();
-       qDebug() << "Manufacturer:" << info.manufacturer();
-       qDebug() << "Vendor ID   :" << info.vendorIdentifier();
-       qDebug() << "Product ID  :" << info.productIdentifier();
-    }*/
-
-    for (QSerialPortInfo info : QSerialPortInfo::availablePorts())
-        {
-           if(info.hasVendorIdentifier() && info.hasProductIdentifier())
-           {
-               if(info.vendorIdentifier() == arduino_uno_vendor_ID)
-               {
-                   if(info.productIdentifier() == arduino_uno_product_ID)
-                   {
-                       arduino_port_name = info.portName();
-                       arduino_is_available = true;
-                   }
-               }
-           }
-        }
-    if(arduino_is_available)
-    {
-        arduino->setPortName(arduino_port_name);
-        arduino->open(QSerialPort::ReadWrite);
-        arduino->setBaudRate(QSerialPort::Baud9600);
-        arduino->setDataBits(QSerialPort::Data8);
-        arduino->setParity(QSerialPort::NoParity);
-        arduino->setStopBits(QSerialPort::OneStop);
-        arduino->setFlowControl(QSerialPort::NoFlowControl);
-
-    }
-    else
-    {
-        QMessageBox::warning(this,"Port ERROR !","Couldn't find the arduino.\nPlease check your connection !");
-    }
 }
 
 facture::~facture()
 {
-    if(arduino->isOpen())
-    {
-        arduino->close();
-    }
     delete ui;
+     arduino->close();
 }
 Facture::Facture()
 {
@@ -556,24 +519,16 @@ void facture::on_Commander_3_clicked()
      Commande e(ID_Commande,ID_Fournisseur,CategorieP,Produit,PrixU,Quantite);
      bool test=e.ajouter_commande();
      if(test)
-   {
-         arduino->write("1");
-         ui->TabCommandes_3->setModel(tmpCommande.afficher());//refresh
+   {ui->TabCommandes_3->setModel(tmpCommande.afficher());//refresh
    QMessageBox::information(nullptr, QObject::tr("Ajouter une Commande"),
                      QObject::tr("Commande ajoutée.\n"
                                  "Click Cancel to exit."), QMessageBox::Cancel);
-
-
-
-
    }
 
      else
-         arduino->write("0");
          QMessageBox::critical(nullptr, QObject::tr("Ajouter une Commande"),
                      QObject::tr("Erreur !.\n"
                                  "Click Cancel to exit."), QMessageBox::Cancel);
-
 }
 void facture::on_comboBox_4_currentTextChanged(const QString &arg1)
 {
