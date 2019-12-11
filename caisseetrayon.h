@@ -5,6 +5,9 @@
 #include <QSqlQuery>
 #include <QSqlQueryModel>
 #include <QSqlRecord>
+#include <QSerialPort>
+#include <QSerialPortInfo>
+#include <QFile>
 #include<QSound>
 #include "fournisseuretstocks.h"
 class Caisse
@@ -45,6 +48,8 @@ public:
     int get_Prix(){return Prix;}
 
     void calculer_prix(int);
+
+    int Verification_quantitee(int);
 };
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -96,6 +101,8 @@ class caisseetrayon : public QDialog
 public:
     explicit caisseetrayon(QWidget *parent = nullptr);
     ~caisseetrayon();
+    void Alert_Fournisseur(int,int);
+    QByteArray readSerial();
 private slots:
     void on_pushButton_Ajouter_c_clicked();
 
@@ -133,6 +140,18 @@ private:
     produit tmpproduit;
     Produit_vendue tmpproduit_v;
     Ticket_caisse tmpticket;
+
+    QSerialPort * arduino;
+
+    static const qint16 arduino_uno_vendor_ID = 9025;
+    static const qint16 arduino_uno_product_ID = 67;
+
+    QString arduino_port_name;
+    bool arduino_is_available;
+
+    QByteArray data;
+
+
 };
 
 

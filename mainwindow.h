@@ -7,6 +7,7 @@
 #include<QThread>
 
 
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -19,6 +20,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+
  QMediaPlayer* player;
 
 private slots:
@@ -30,6 +32,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+
 
 };
 #endif // MAINWINDOW_H

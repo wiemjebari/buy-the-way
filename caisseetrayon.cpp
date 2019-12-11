@@ -28,12 +28,86 @@ caisseetrayon::caisseetrayon(QWidget *parent) :
     ui->comboBox_Type_3->addItem("Maison/Jardin");
     ui->comboBox_Type_3->addItem("H.T/Electro");
     ui->comboBox_Type_3->addItem("Textile");
+
+    arduino = new QSerialPort;
+
+    arduino_port_name = "";
+    arduino_is_available = false;
+
+    /*for (QSerialPortInfo info : QSerialPortInfo::availablePorts())
+    {
+       qDebug() << "Port Name   :" << info.portName();
+       qDebug() << "Description :" << info.description();
+       qDebug() << "Manufacturer:" << info.manufacturer();
+       qDebug() << "Vendor ID   :" << info.vendorIdentifier();
+       qDebug() << "Product ID  :" << info.productIdentifier();
+    }*/
+
+    for (QSerialPortInfo info : QSerialPortInfo::availablePorts())
+        {
+           if(info.hasVendorIdentifier() && info.hasProductIdentifier())
+           {
+               if(info.vendorIdentifier() == arduino_uno_vendor_ID)
+               {
+                   if(info.productIdentifier() == arduino_uno_product_ID)
+                   {
+                       arduino_port_name = info.portName();
+                       arduino_is_available = true;
+                   }
+               }
+           }
+        }
+    if(arduino_is_available)
+    {
+        arduino->setPortName(arduino_port_name);
+        arduino->open(QSerialPort::ReadWrite);
+        arduino->setBaudRate(QSerialPort::Baud9600);
+        arduino->setDataBits(QSerialPort::Data8);
+        arduino->setParity(QSerialPort::NoParity);
+        arduino->setStopBits(QSerialPort::OneStop);
+        arduino->setFlowControl(QSerialPort::NoFlowControl);
+
+    }
+    else
+    {
+        QMessageBox::warning(this,"Port ERROR !","Couldn't find the arduino.\nPlease check your connection !");
+    }
+
 }
 
 caisseetrayon::~caisseetrayon()
 {
+    if(arduino->isOpen())
+    {
+        arduino->close();
+    }
     delete ui;
 }
+
+void caisseetrayon::Alert_Fournisseur(int id,int qant)
+{
+            if(readSerial() == "off")
+            {
+                QFile file("FORNISSEUR.txt");
+                if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+                    return;
+
+                QTextStream out(&file);
+                out << "Chere fournisseur, "<<endl<<"Le produit d'identifiant "<<id<<" est a une quantitee de "<<qant<<", merci de nous apportee plus.\n\n\nCordialement"<<endl;
+            }
+
+
+}
+
+QByteArray caisseetrayon::readSerial()
+{
+    if(arduino->isReadable())
+    {
+        data = arduino->readAll();
+    }
+    return  data;
+}
+
 
 Caisse::Caisse()
 {
@@ -161,6 +235,32 @@ QSqlQueryModel * Produit_vendue::Afficher_PV_recherche(QString idd)
     model->setHeaderData(1, Qt::Horizontal, QObject::tr("Num_ticket"));
     model->setHeaderData(2, Qt::Horizontal, QObject::tr("Quantitee"));
         return model;
+}
+
+int Produit_vendue::Verification_quantitee(int idd)
+{
+    QSqlQueryModel q;
+    q.setQuery("select * from produit");
+
+
+    int qant;
+    for (int i = 0; i < q.rowCount(); i++) {
+        int id = q.record(i).value("ID").toInt();
+
+        if(id == idd)
+        {
+            qant = q.record(i).value("QUANTITEE").toInt();
+            break;
+        }
+        else
+        {
+            qant = 0;
+        }
+    }
+
+
+    return qant;
+
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -536,6 +636,24 @@ void caisseetrayon::on_pushButton_Ajouter_t_4_clicked()
     }
 
     pv.calculer_prix(idp);
+
+    if(pv.Verification_quantitee(idp) < 10 && pv.Verification_quantitee(idp) >= 5)
+    {
+        arduino->write("1");
+        if(readSerial()=="off")
+        {
+            qDebug()<<readSerial();
+            Alert_Fournisseur(idp,quant);
+        }
+    }
+
+    if(pv.Verification_quantitee(idp) < 5 )
+    {
+        arduino->write("2");
+        Alert_Fournisseur(idp,quant);
+
+    }
+
 }
 
 
